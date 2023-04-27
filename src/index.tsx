@@ -3,8 +3,7 @@ import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
 import { useRouteError } from 'react-router-dom';
 
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import Root from './routes/root';
 import Less from './components/Error/Less';
 import Index from './routes/index';
 
@@ -19,14 +18,12 @@ function ErrorBoundary() {
 const router = createBrowserRouter([
   {
     path: "",
-    element: <App />,
+    element: <Root />,
     errorElement: <ErrorBoundary/>,
     // loader: rootLoader,
     // action: rootAction
     children: [
       {
-          path: "contacts",
-          element: <Less />,
           // loader: contactLoader,
           // action: contactAction,
         errorElement: <ErrorBoundary />,
