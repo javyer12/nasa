@@ -1,62 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import { API_KEY } from '../config/index';
-const API = `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}`;
+import { useEffect } from 'react';
+import FetchData from '../hooks/FetchNasa';
+import { API_KEY, DAILY_API } from '../config/index';
+import { Link } from 'react-router-dom';
 
-interface DailyData {
-  copyright:string,
-  date: string, 
+const API = `${DAILY_API}${API_KEY}`;
+
+type DailyData = {
+  copyright: string,
+  date: string,
   explanation: string,
   title: string,
-  url:string 
-} 
-const Daily ={
-  copyright:"Jesus Mega",
-  date: "2014-02-22",
-  explanation: "No New Information",
-  title: "Reload the Page",
-  url:"https://www.mos.org/sites/dev-elvis.mos.org/files/images/main/uploads/slides/ExUni-LP.jpg"
+  hdurl: string
 }
-function App() {
-  const [ datum, setDatum ] = useState<DailyData>(Daily);
+function Index() {
+  const { data, loading, error } = FetchData<DailyData>(API);
 
-  useEffect(() => {
-    async function DailyData() {
-      try {
-        const fetchData = async () => {
-          const response = await fetch(API);
-          const jsonData = await response.json();
-          console.log(jsonData)
-          setDatum(jsonData);
-        };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-        fetchData();
-      } catch (e) {
-        throw new Error(`Could not get user Github`);
-      }
-    }
-    DailyData();
-  }, [])
-
-  const daily = {
-    copyright: datum?.copyright,
-    date: datum?.date,
-    explanation: datum?.explanation,
-    title: datum?.title,
-    url: datum?.url
+  if (error) {
+    return <div>Error: {error.message}</div>;
   }
 
   return (
-    <div>
-      <h1>My Component</h1>
-      {daily.date}
-      {/* {data.map((item) => (
-        <div key={item.id}>
-          <h3>{item.title}</h3>
-          <p>{item.body}</p>
-        </div> */}
-      {/* ))} */}
+    <div id='root' className=' rounded bg-white'>
+      <div className="card">
+        <div className="card-body">
+          <h5 className="card-title text-success">{data?.title}</h5>
+          <p className="card-text">{data?.explanation}</p>
+          <div className='d-flex justify-content-around'>
+            <p className="card-text text-body-secondary">Date: <small className="text-body-secondary">{data?.date}</small></p>
+            <p className="text-body-secondary">Author:  {data?.copyright === undefined || null ? <small>No Author</small> : <small>{data.copyright}</small>}</p>
+          </div>
+          <img src={data?.hdurl} className="nasa_image" alt="daily image" />
+
+        </div>
+      </div>
+      {/* <p className='text-white'>Hello</p>
+      <img src={data?.url}  className="img-fluid" /> */}
     </div>
   );
 }
 
-export default App;
+export default Index;
