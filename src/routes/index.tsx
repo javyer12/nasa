@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import FetchData from '../hooks/FetchNasa';
 import { API_KEY, DAILY_API } from '../config/index';
-import { Link } from 'react-router-dom';
 
 const API = `${DAILY_API}${API_KEY}`;
 
@@ -28,17 +27,37 @@ function Index() {
       <div className="card">
         <div className="card-body">
           <h5 className="card-title text-success">{data?.title}</h5>
-          <p className="card-text">{data?.explanation}</p>
-          <div className='d-flex justify-content-around'>
-            <p className="card-text text-body-secondary">Date: <small className="text-body-secondary">{data?.date}</small></p>
-            <p className="text-body-secondary">Author:  {data?.copyright === undefined || null ? <small>No Author</small> : <small>{data.copyright}</small>}</p>
-          </div>
-          <img src={data?.hdurl} className="nasa_image" alt="daily image" />
 
+          <div className='d-flex justify-content-around'>
+
+          </div>
+          <img src={data?.hdurl} className="nasa_image img-fluid" alt="daily image" />
+          <button type="button" className="btn btn-light  m-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            Read More...
+          </button>
+
+          <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5" id="staticBackdropLabel">{data?.title}</h1>
+                  <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div className="modal-body">
+                  <img src={data?.hdurl} className="nasa_image img-fluid" alt="daily image" />
+                </div>
+                <div className="modal-body">
+                  {data?.explanation}
+                </div>
+                <div className="modal-footer">
+                  <p className="card-text text-body-secondary">Date: <small className="text-body-secondary">{data?.date}</small></p>
+                  <p className="text-body-secondary">Author:  {data?.copyright === undefined || null ? <small>No Author</small> : <small>{data.copyright}</small>}</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      {/* <p className='text-white'>Hello</p>
-      <img src={data?.url}  className="img-fluid" /> */}
     </div>
   );
 }
